@@ -7,7 +7,7 @@ services:
         image: videosearch:latest
         command: ["python", 'videoSearch.py', '/input/${INPUT_FILE}', "/db/${DB_PATH}", "${THRESHOLD}"]
         volumes:
-          - ./db/:/db/
-          - ./input/:/input/
+          - ./db/:/db/:ro
+          - ./input/:/input/:ro
         ports:
             - "9090:9090"
