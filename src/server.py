@@ -4,13 +4,13 @@ server.py
 
 Created by Isabelle Sennett
 
-To use: (1) run "python server.py" 
+To use: (1) run "python server.py"
         (2) go to a web browser type in this URL http://localhost:9090/
 
-Creates a server that maintains the web-based user interface. The server 
-interacts with both the search engine and the client. It processes requests 
+Creates a server that maintains the web-based user interface. The server
+interacts with both the search engine and the client. It processes requests
 from the client such as rerouting to the about or help page while also handling
- data that the client posts to the server. The server starts the search engine 
+ data that the client posts to the server. The server starts the search engine
 """
 
 # Uses the following html templates:
@@ -36,8 +36,8 @@ app.config['ALLOWED_EXTENSIONS'] = set(['mp4'])
 
 
 #Home page:
-#     User can: upload a video and select a threshold, 
-#               they also have access to the about and help pages 
+#     User can: upload a video and select a threshold,
+#               they also have access to the about and help pages
 @app.route('/')
 def index():
     return render_template('home.html')
@@ -57,14 +57,14 @@ def upload():
 
     threshold = request.form['threshold']
 
-    return redirect(url_for('streamResults', 
-                                threshold=threshold, 
+    return redirect(url_for('streamResults',
+                                threshold=threshold,
                                 queryFilename = filename))
 
 
 # PURPOSE: For a given file, return whether it's an allowed type or not
 # NOTE: our test database doesn't have anything besides mp4 files so this isn't
-#       really necessary but if this project were to be developed further this  
+#       really necessary but if this project were to be developed further this
 #       can be used to check whether the the file is an allowed type
 def allowed_file(filename):
     return '.' in filename and \
@@ -75,7 +75,7 @@ def allowed_file(filename):
 # Start the search process and then handle live streaming the results
 @app.route('/results/<threshold>/<queryFilename>/', methods=['POST', 'GET'])
 def streamResults(threshold, queryFilename):
-    
+
     resultsQueue = mp.Queue()
     quaryPath = 'static/query' + '/' + queryFilename
     database = app.config['DATABASE'] + '/'
@@ -86,14 +86,14 @@ def streamResults(threshold, queryFilename):
 
     # live stream the results
     result = generate_results(numJobs, resultsQueue)
-    return Response(stream_template('streaming_results.html', 
+    return Response(stream_template('streaming_results.html',
                                         video_files = result))
 
 # Helper function for StreamResults
 def stream_template(template_name, **context):
     app.update_template_context(context)
     template = app.jinja_env.get_template(template_name)
-    print "t", template 
+    print "t", template
     rv = template.stream(context)
     return rv
 
@@ -122,8 +122,8 @@ def help():
     return render_template('help.html')
 
 
-# Runs the application on a local server. If the debug flag is set 
-# the server will automatically reload for code changes and show a debugger in 
+# Runs the application on a local server. If the debug flag is set
+# the server will automatically reload for code changes and show a debugger in
 # case an exception happened.
 if __name__ == '__main__':
     app.run(port=9090)
