@@ -1,10 +1,13 @@
 version: "2.2"
 services:
     videosearch:
-        restart: on-failure
         hostname: videosearch
+        container_name: videosearch
         build: .
         image: videosearch:latest
-        # command: ["python", 'src/videoSearch.py', './static/video/Sail7s.mp4', "./static/video", "30"]
+        command: ["python", 'videoSearch.py', '/input/${INPUT_FILE}', "/db/${DB_PATH}", "${THRESHOLD}"]
+        volumes:
+          - ./db/:/db/
+          - ./input/:/input/
         ports:
-            - "12000:12000"
+            - "9090:9090"
