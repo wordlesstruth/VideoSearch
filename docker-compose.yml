@@ -1,0 +1,10 @@
+version: "2.2"
+services:
+    videosearch:
+        restart: on-failure
+        hostname: videosearch
+        build: .
+        image: videosearch:latest
+        # command: ["python", 'src/videoSearch.py', './static/video/Sail7s.mp4', "./static/video", "30"]
+        ports:
+            - "12000:12000"
